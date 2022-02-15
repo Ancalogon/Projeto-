@@ -1,0 +1,137 @@
+############################################################################################################################
+#               Programa para encontrar raízes de funções via abordagem numérica utilizando o método da bissecção          #
+
+from base64 import encode
+from cmath import log
+import math
+from wsgiref.validate import validator
+from xml.dom import xmlbuilder
+
+# algoritimo para encontrar as raízes
+
+
+def escolha1(a, b):  # a e b são os dados iniciais, no caso, o intervalo na qual contém as raízes da função
+    # critério de parada, neste caso, tomamos a-b >= e, já que o critério de parada do while é sempre um valor verdadeiro. Contudo, no algorítimo original, tomemeos o critério de parada por b-a<e.
+    while(abs(b-a)) > e:
+        if(abs(b-a) <= e):  # primeira verificação do método. Se o intervalo fornecido pelo usuário for bom,  tomemos a raíz como sendo o ponto médio do intervalo
+            raiz = (b+a)/2
+            # imprime o valor calculado na linha 14
+            print("a melhor aproximação da raiz da função é: ")
+            print(raiz)
+        else:
+            # caso contráio, diminuiremos o intervalo, tendo em vista o seu ponto médio
+            valor = (a+b)/2
+            # baseado no valor, calculemos se a função muda de sinal neste novo intervalo. Se muda, significa que a função cruza o eixo x, iso significa que há pelo menos uma raíz no intervalo [valor,b]
+            if((valor - math.log(valor)*valor)*(a - math.log(a)*a) > 0):
+                # se o sinal for maior que 0, tomemos a = valor, se isso não ocorrer, tomemos b = valor. Isto pode ser explicado da seguinte forma, se o novo valor calculado não muda de sinal, significa que neste novo intervalo, a função não cruza o eixo x. Portanto devemos ajustar o intervalo pra condição f(valor)f(b)<0 ser satisfeita.
+                a = valor
+                print("*******************")
+                print("a =")
+                print(valor)
+                print("b =")
+                print(b)
+                if((abs(b-valor)) < e):
+                    raiz = valor
+                    print("a melhor aproximação da raiz da função é: ")
+                    print(raiz)
+                else:
+                    valor = (valor+b)/2
+            else:
+                b = valor
+                print("*******************")
+                print("a =")
+                print(a)
+                print("b = ")
+                print(valor)
+    return valor
+
+# as demais funções fazem a mesma coisa, porém, com funções matemáticas diferentes
+
+
+def escolha2(a, b):
+    while(abs(b-a)) > e:
+        if(abs(b-a) <= e):
+            raiz = (b+a)/2
+            print("a melhor aproximação da raiz da função é: ")
+            print(raiz)
+        else:
+            valor = (a+b)/2
+            if((valor ^ 2 - math.sin(valor))*(a ^ 2 - math.sin(a)) > 0):
+                a = valor
+                print("a = ")
+                print(valor)
+                if((abs(b-valor)) < e):
+                    raiz = valor
+                    print("a melhor aproximação da raiz da função é: ")
+                    print(raiz)
+                else:
+                    valor = (valor+b)/2
+            else:
+                print("a = ")
+                print(valor)
+                b = valor
+    return valor
+
+
+def escolha3(a, b):
+    while(abs(b-a)) > e:
+        if(abs(b-a) <= e):
+            raiz = (b+a)/2
+            print("a melhor aproximação da raiz da função é: ")
+            print(raiz)
+        else:
+            valor = (a+b)/2
+            if((valor + math.log10(valor))*(a + math.log10(valor)) > 0):
+                a = valor
+                if((abs(b-valor)) < e):
+                    raiz = valor
+                    print(raiz)
+                else:
+                    valor = (valor+b)/2
+            else:
+                b = valor
+    return valor
+
+
+# menu para selecionar a função desejada
+print("**********************************")
+print("* Escolha uma das funções abaixo *")
+print("**********************************")
+print("1 - f(x) =  x - xLn(x)")
+print("2 - f(x) = x^2 - Sen(x)")
+print("3 - f(x) = x + Log(x)")
+print("4 - f(x) = x + 2 Cos(x)")
+
+escolha = int(input("Digite o número que corresponde a função desejada: "))
+
+a = float(input("Digite o primeiro valor do intervalo (a,b): "))
+b = float(input("Digite o segundo valor do intervalo (a,b): "))
+e = float(input("Digite o valor do erro desejado: "))
+
+
+if(escolha == 1):
+    print("A função escolhida foi f(x) =  x - xLn(x)")
+    print("Verificaremos se f(a)*f(b) < 0")
+    if((a - math.log(a)*a)*(b - math.log(b)*b) < 0):
+        print("Como f(a)f(b) <0, então a função muda de sinal")
+        escolha1(a, b)
+    else:
+        print("A função não muda de sinal, escolha novos valores para o intervalo.")
+
+if(escolha == 2):
+    print("A função escolhida foi f(x) = x^2 - Sen(x)")
+    print("Verificaremos se f(a)*f(b) < 0")
+    if(float((a**2 - math.sin(a))*(b**2 - math.sin(b))) < 0):
+        print("Como f(a)f(b) <0, então a função muda de sinal")
+        escolha2(a, b)
+    else:
+        print("A função não muda de sinal, escolha novos valores para o intervalo.")
+
+if(escolha == 3):
+    print("A função escolhida foi f(x) = x + Log(x)")
+    print("Verificaremos se f(a)*f(b) < 0")
+    if(float(a + math.log10(a))*((b + math.log10(b))) < 0):
+        print("Como f(a)f(b) <0, então a função muda de sinal")
+        escolha3(a, b)
+    else:
+        print("A função não muda de sinal, escolha novos valores para o intervalo.")
